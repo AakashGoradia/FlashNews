@@ -1,21 +1,26 @@
-import { useState, useEffect } from 'react';
-import { Newspaper } from 'lucide-react';
-import { Sidebar } from './components/Sidebar';
-import { NewsCard } from './components/NewsCard';
-import { ArticlePreview } from './components/ArticlePreview';
-import type { Article, Category } from './types';
-import { API_KEY } from './utils/config.js';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import { Newspaper } from "lucide-react";
+import { Sidebar } from "./components/Sidebar";
+import { NewsCard } from "./components/NewsCard";
+import { ArticlePreview } from "./components/ArticlePreview";
+import type { Article, Category } from "./types";
+import { API_KEY } from "./utils/config.js";
+import axios from "axios";
 
 const App = () => {
   const [news, setNews] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category>('general');
+  const [selectedCategory, setSelectedCategory] = useState<Category>("general");
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
 
   useEffect(() => {
     const fetchNews = async () => {
       const response = await axios.get(
-        `https://newsapi.org/v2/top-headlines?category=${selectedCategory}&apiKey=${API_KEY}`
+        `https://newsapi.org/v2/top-headlines?category=${selectedCategory}&apiKey=${API_KEY}`,
+        {
+          headers: {
+            withCredentials: false,
+          },
+        }
       );
       setNews(response.data.articles);
     };
@@ -53,9 +58,11 @@ const App = () => {
         </aside>
 
         {/* Main Content */}
-        <main className={`flex-1 overflow-y-auto transition-all duration-300 ${
-          selectedArticle ? 'lg:mr-[40rem]' : ''
-        }`}>
+        <main
+          className={`flex-1 overflow-y-auto transition-all duration-300 ${
+            selectedArticle ? "lg:mr-[40rem]" : ""
+          }`}
+        >
           <div className="max-w-5xl mx-auto px-4 py-6">
             <div className="space-y-6">
               {news.map((article, index) => (
@@ -78,6 +85,6 @@ const App = () => {
       </div>
     </div>
   );
-}
+};
 
 export default App;
