@@ -1,3 +1,3 @@
-# NewsFlash
+# FlashNews by Aakash Goradia
 
-[Edit in StackBlitz next generation editor ⚡️](https://stackblitz.com/~/github.com/AakashGoradia/NewsFlash)
+This is part of the assignment given by Logiqids

@@ -1,35 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Newspaper } from 'lucide-react';
 import { Sidebar } from './components/Sidebar';
 import { NewsCard } from './components/NewsCard';
 import { ArticlePreview } from './components/ArticlePreview';
 import type { Article, Category } from './types';
+import { API_KEY } from './utils/config.js';
+import axios from 'axios';
 
-// Temporary mock data until API integration
-const mockArticles: Article[] = [
-  {
-    title: "Breaking News: Amazing Discovery",
-    description: "Scientists have made an incredible breakthrough in quantum computing that could revolutionize the way we process information. This discovery opens new possibilities in the field of quantum mechanics and computational science...",
-    url: "https://example.com",
-    urlToImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800",
-    publishedAt: new Date().toISOString(),
-    source: { name: "Tech Daily" },
-    content: "Scientists have made an incredible breakthrough in quantum computing..."
-  },
-  {
-    title: "New Technology Advancement",
-    description: "Revolutionary new technology promises to transform the industry with groundbreaking innovations in artificial intelligence and machine learning, leading to more efficient and intelligent systems...",
-    url: "https://example.com",
-    urlToImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800",
-    publishedAt: new Date().toISOString(),
-    source: { name: "Science Weekly" },
-    content: "Revolutionary new technology promises to transform the industry..."
-  }
-];
-
-function App() {
+const App = () => {
+  const [news, setNews] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>('general');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const response = await axios.get(
+        `https://newsapi.org/v2/top-headlines?category=${selectedCategory}&apiKey=${API_KEY}`
+      );
+      setNews(response.data.articles);
+    };
+    fetchNews();
+  }, [selectedCategory]);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -38,7 +29,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Newspaper className="h-8 w-8 text-primary-600" />
-              <h1 className="text-2xl font-bold text-gray-900">NewsFlash</h1>
+              <h1 className="text-2xl font-bold text-gray-900">FlashNews</h1>
             </div>
             <div className="lg:hidden">
               <Sidebar
@@ -67,7 +58,7 @@ function App() {
         }`}>
           <div className="max-w-5xl mx-auto px-4 py-6">
             <div className="space-y-6">
-              {mockArticles.map((article, index) => (
+              {news.map((article, index) => (
                 <NewsCard
                   key={index}
                   article={article}
